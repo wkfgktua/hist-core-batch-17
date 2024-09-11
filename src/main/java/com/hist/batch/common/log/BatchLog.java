@@ -21,6 +21,7 @@ public class BatchLog {
 	private boolean showResult;
 	private boolean hasError;
 	private List<String> logs;
+	private List<Object> params;
 
 	public BatchLog() {
 		hasError = false;
@@ -47,6 +48,34 @@ public class BatchLog {
 		this.logs.add(log);
 
 		return this;
+	}
+
+	/**
+	 * @Desc	  : param 추가
+	 * @Interface :
+	 * @Param	 : param Object
+	 * @Return	: BatchLog
+	 * @ETC	   :
+	 * @Since	 :
+	 * @Author	:
+	 *
+	 */
+	public BatchLog addParam(Object param) {
+		if (params == null) {
+			params = new ArrayList<>();
+		}
+
+		this.params.add(param);
+
+		return this;
+	}
+
+	public boolean hasParams() {
+	    return params != null && !params.isEmpty();
+	}
+
+	public List<Object> getParam() {
+		return params;
 	}
 
 	/**
@@ -165,6 +194,4 @@ public class BatchLog {
 	public boolean isHasError() {
 		return hasError;
 	}
-
-
 }

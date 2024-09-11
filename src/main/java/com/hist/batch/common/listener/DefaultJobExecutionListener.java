@@ -69,15 +69,23 @@ public class DefaultJobExecutionListener implements JobExecutionListener, Initia
 		if (BatchLogFactory.isLogExist(jobExecution)) {
 			BatchLog batchLog = BatchLogFactory.getLog(jobExecution);
 
-			Map<String, String> logMap = new HashMap<String, String>();
+			Map<String, Object> logMap = new HashMap<String, Object>();
 			logMap.put("totalCnt", String.valueOf(batchLog.getTotalCnt()));
 			logMap.put("errorCnt", String.valueOf(batchLog.getErrorCnt()));
+			logMap.put("message", batchLog.toString());
+			if (batchLog.hasParams()) {
+				try {
+					logMap.put("param", (objectMapper.writeValueAsString(batchLog.getParam())));
+				} catch (JsonProcessingException e) {
+					log.error("Parsing error afterJob BatchLog : {}, jobExecutionId : {}", e.getMessage(), jobExecution.getId());
+				}
+			}
 
 			if("COMPLETED".equals(jobExecution.getExitStatus().getExitCode())) {
 				try {
 					jobExecution.setExitStatus(new ExitStatus(jobExecution.getExitStatus().getExitCode(), objectMapper.writeValueAsString(logMap)));
 				} catch (JsonProcessingException e) {
-					log.error("Async EXIT_MESSAGE Parsing error : {}", e.getMessage());
+					log.error("Parsing error afterJob BatchLog : {}, jobExecutionId : {}", e.getMessage(), jobExecution.getId());
 				}
 			}
 

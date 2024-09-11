@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hist.batch.common.multiSync.mapper.MultiSyncMapper">
+	<insert id="insertMultiSync" parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="msId">
+		INSERT INTO multi_sync (
+			exe_id
+			, job_execution_id
+		<if test='status != null and status != ""'>, status</if>
+			, multi_count
+		) VALUES (
+			${exeId}
+			, ${jobExecutionId}
+		<if test='status != null and status != ""'>, #{status}</if>
+			, ${multiCount}		)
+	</insert>
+
+	<select id="selectMultiSyncEndCount" parameterType="java.util.HashMap" resultType="long">
+		SELECT count(1) cnt
+		FROM multi_sync
+		WHERE exe_id  = ${exeId}
+			AND status IN ('END', 'FIN')
+	</select>
+
+	<select id="selectMultiSyncFailCount" parameterType="java.util.HashMap" resultType="long">
+		SELECT count(1) cnt
+		FROM multi_sync
+		WHERE exe_id  = ${exeId}
+			AND status = 'FAIL'
+	</select>
+
+	<update id="updateMultiSyncStatus" parameterType="java.util.HashMap">
+		update multi_sync set
+			status = #{status}
+		<if test='status != null and status == "END"'>
+			, end_dttm = CURRENT_TIMESTAMP
+		</if>
+		<if test='status != null and status == "END"'>
+			, timeout_dttm = (SELECT DATE_ADD(CURRENT_TIMESTAMP, INTERVAL ${timeOutSec} SECOND) FROM DUAL)
+		</if>
+		<if test='status != null and status == "FIN"'>
+			, fin_dttm = CURRENT_TIMESTAMP
+		</if>
+		<if test='status != null and status == "FAIL"'>
+			, fail_dttm = CURRENT_TIMESTAMP
+		</if>
+		<if test='msg != null and msg != ""'>
+			, msg = #{msg}
+		</if>
+		where ms_id = ${msId}
+	</update>
+
+</mapper>

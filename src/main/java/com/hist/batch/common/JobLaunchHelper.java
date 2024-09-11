@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hist.batch.common.cons.BatchConst;
 import com.hist.batch.common.log.BatchLog;
 import com.hist.batch.common.log.BatchLogFactory;
@@ -31,6 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class JobLaunchHelper {
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Autowired
 	private	ApplicationContext springContext;
@@ -106,6 +111,14 @@ public class JobLaunchHelper {
 
 			if (batchLog.getShowResult()) {
 				batchLog.add("total:" + batchLog.getTotalCnt() + ",error:" + batchLog.getErrorCnt());
+			}
+
+			if (batchLog.hasParams()) {
+				try {
+					rv.setParam(objectMapper.writeValueAsString(batchLog.getParam()));
+				} catch (JsonProcessingException e) {
+					log.error("Parsing error JobLaunchHelper BatchLog : {}, jobExecutionId : {}", e.getMessage(), je.getId());
+				}
 			}
 
 			switch(je.getStatus()) {
