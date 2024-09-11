@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.hist.core</groupId>
+	<artifactId>hist-core-batch</artifactId>
+	<version>0.0.2</version>
+	<packaging>jar</packaging>
+	<name>hist-core-biz</name>
+	<description>hist core biz lib</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.18</version>
+		<relativePath/>
+	</parent>
+
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.hist.core</groupId>
+			<artifactId>hist-core-biz</artifactId>
+			<version>0.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-batch</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>hist-hcl-public</id>
+			<name>hist maven public</name>
+			<url>http://nlb-pd-devops-pri-0494990017b15c0a.elb.ap-northeast-2.amazonaws.com:8081/repository/hcl-nexus-group/</url>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>hist-hcl-releases</id>
+			<name>hist maven releases</name>
+			<url>http://nlb-pd-devops-pri-0494990017b15c0a.elb.ap-northeast-2.amazonaws.com:8081/repository/hcl-nexus/</url>
+		</repository>
+		<snapshotRepository>
+			<id>hist-hcl-snapshots</id>
+			<name>hist maven snapshots</name>
+			<url>http://nlb-pd-devops-pri-0494990017b15c0a.elb.ap-northeast-2.amazonaws.com:8081/repository/hcl-nexus-snapshot/</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>
