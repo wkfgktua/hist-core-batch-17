@@ -5,8 +5,8 @@
 	<artifactId>hist-core-batch</artifactId>
 	<version>0.0.2</version>
 	<packaging>jar</packaging>
-	<name>hist-core-biz</name>
-	<description>hist core biz lib</description>
+	<name>hist-core-batch</name>
+	<description>hist core batch lib</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -49,22 +49,22 @@
 
 	<repositories>
 		<repository>
-			<id>hist-hcl-public</id>
-			<name>hist maven public</name>
-			<url>http://nlb-pd-devops-pri-0494990017b15c0a.elb.ap-northeast-2.amazonaws.com:8081/repository/hcl-nexus-group/</url>
+			<id>histbatch-public</id>
+			<name>hist batch public</name>
+			<url>http://10.197.128.249:8081/repository/cmm-histbatch-group/</url>
 		</repository>
 	</repositories>
 
 	<distributionManagement>
 		<repository>
-			<id>hist-hcl-releases</id>
-			<name>hist maven releases</name>
-			<url>http://nlb-pd-devops-pri-0494990017b15c0a.elb.ap-northeast-2.amazonaws.com:8081/repository/hcl-nexus/</url>
+			<id>histbatch-releases</id>
+			<name>hist batch releases</name>
+			<url>http://10.197.128.249:8081/repository/cmm-histbatch/</url>
 		</repository>
 		<snapshotRepository>
-			<id>hist-hcl-snapshots</id>
-			<name>hist maven snapshots</name>
-			<url>http://nlb-pd-devops-pri-0494990017b15c0a.elb.ap-northeast-2.amazonaws.com:8081/repository/hcl-nexus-snapshot/</url>
+			<id>histbatch-snapshots</id>
+			<name>hist batch snapshots</name>
+			<url>http://10.197.128.249:8081/repository/cmm-histbatch-snapshot/</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>
