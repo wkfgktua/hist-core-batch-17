@@ -24,6 +24,7 @@ public class BatchLog {
 	private List<Object> params;
 
 	public BatchLog() {
+		showResult = false;
 		hasError = false;
 		logs = new ArrayList<>();
 		totalCnt = 0;
