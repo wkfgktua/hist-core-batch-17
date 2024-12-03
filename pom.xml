@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.hist.core</groupId>
 	<artifactId>hist-core-batch</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.5</version>
 	<packaging>jar</packaging>
 	<name>hist-core-batch</name>
 	<description>hist core batch lib</description>
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>com.hist.core</groupId>
 			<artifactId>hist-core-biz</artifactId>
-			<version>0.0.4</version>
+			<version>0.0.5</version>
 		</dependency>
 
 		<dependency>
