@@ -1,5 +1,6 @@
 package com.hist.batch.common.config;
 
+import java.time.Duration;
 import java.util.Date;
 
 import org.springframework.batch.core.BatchStatus;
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ShutdownJobListener implements ApplicationListener<ContextClosedEvent> {
 
-	@Value("${histcore.awaitShutdown:-1}")
-	private int awaitShutdown;
+	@Value("${spring.lifecycle.timeout-per-shutdown-phase:0}")
+    private Duration timeoutPerShutdownPhase;
 
 	@Autowired
     private JobRepository jobRepository;
@@ -26,7 +27,7 @@ public class ShutdownJobListener implements ApplicationListener<ContextClosedEve
 		for (JobExecution je : RunningJobFactory.getRunningJob()) {
 			if (je.isRunning() && je.getStatus() == BatchStatus.STARTED) {
 				je.setStatus(BatchStatus.STOPPING);
-				je.setExitStatus(new ExitStatus("WAS_SHUTDOWN", "Job stopped due to WAS shutdown after awaitShutdown :" + awaitShutdown));
+				je.setExitStatus(new ExitStatus("WAS_SHUTDOWN", "Job stopped due to WAS shutdown after await :" + timeoutPerShutdownPhase.toMillis()));
 				je.setEndTime(new Date());
 	            jobRepository.update(je);
 			}

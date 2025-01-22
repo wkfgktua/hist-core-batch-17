@@ -75,10 +75,6 @@ public class DefaultJobExecutionListener implements JobExecutionListener, Initia
 			logMap.put("message", batchLog.toString());
 
 			if (batchLog.hasParams()) {
-				logMap.put("param", batchLog.getParam());
-			}
-
-			if (batchLog.hasParams()) {
 				try {
 					logMap.put("param", (objectMapper.writeValueAsString(batchLog.getParam())));
 				} catch (JsonProcessingException e) {

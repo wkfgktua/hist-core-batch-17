@@ -1,5 +1,7 @@
 package com.hist.batch.common.config;
 
+import java.time.Duration;
+
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 public class AsyncJobLaunchConfig {
 
-	@Value("${histcore.awaitShutdown:-1}")
-	private int awaitShutdown;
+	@Value("${spring.lifecycle.timeout-per-shutdown-phase:0}")
+    private Duration timeoutPerShutdownPhase;
 
 	@Autowired
 	private JobRepository jobRepository;
@@ -35,7 +37,7 @@ public class AsyncJobLaunchConfig {
         executor.setQueueCapacity(100);
         executor.setThreadNamePrefix("ASYNC task-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.setAwaitTerminationMillis(awaitShutdown);
+        executor.setAwaitTerminationMillis(timeoutPerShutdownPhase.toMillis());
         executor.initialize();
         return executor;
     }
