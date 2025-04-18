@@ -16,12 +16,13 @@ public class ParamUtils {
 
 	private static ObjectMapper objectMapper;
 
-	public static JobParametersBuilder bodyToParam(JobParametersBuilder jobParam, String requestBody) {
+	public static Map<?, ?> bodyToParam(JobParametersBuilder jobParam, String requestBody) {
 		if(objectMapper == null) objectMapper = new ObjectMapper();
+		Map<?, ?> paramMap = null;
 
 		if (!Objects.isNull(requestBody)) {
 			try {
-				Map<?, ?> paramMap = objectMapper.readValue(requestBody, Map.class);
+				paramMap = objectMapper.readValue(requestBody, Map.class);
 				paramMap.forEach((key, value) -> jobParam.addString((String)key, String.valueOf(value)));
 			} catch (JsonMappingException e) {
 				log.error("addReqBodyToParam error :" + e.getMessage());
@@ -30,6 +31,6 @@ public class ParamUtils {
 			}
 		}
 
-		return jobParam;
+		return paramMap;
 	}
 }
