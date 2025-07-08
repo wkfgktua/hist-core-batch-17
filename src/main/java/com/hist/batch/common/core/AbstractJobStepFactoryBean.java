@@ -20,6 +20,20 @@ public abstract class AbstractJobStepFactoryBean implements FactoryBean<Step>, B
 	@Autowired
 	private StepBuilderFactory stepBuilderFactory;
 
+	private final DefaultTransactionAttribute transactionAttribute = new DefaultTransactionAttribute() {
+		private static final long serialVersionUID = 1L;
+
+		{
+			setPropagationBehavior(Propagation.NOT_SUPPORTED.value());
+			setIsolationLevel(Isolation.DEFAULT.value());
+		}
+
+		@Override
+		public boolean rollbackOn(Throwable ex) {
+			return true;
+		}
+	};
+
 	@Override
 	public final Class<?> getObjectType() {
 		return Step.class;
@@ -27,25 +41,17 @@ public abstract class AbstractJobStepFactoryBean implements FactoryBean<Step>, B
 
 	@Override
 	public final void setBeanName(String name) {
-		beanName = name;
+		this.beanName = name;
 	}
 
 	protected abstract Step defineStep(StepBuilder stepBuilder);
 
 	@Override
 	public final Step getObject() throws Exception {
-		//return defineStep(stepBuilderFactory.get(beanName).listener(new DefaultStepListener<>()));
-
 		Step step = defineStep(stepBuilderFactory.get(beanName).listener(new DefaultStepListener<>()));
 
-		if (step instanceof TaskletStep) {
-			TaskletStep taskletStep = (TaskletStep) step;
-
-			DefaultTransactionAttribute attribute = new DefaultTransactionAttribute();
-			attribute.setPropagationBehavior(Propagation.NOT_SUPPORTED.value());
-			attribute.setIsolationLevel(Isolation.DEFAULT.value());
-
-			taskletStep.setTransactionAttribute(attribute);
+		if (step instanceof TaskletStep taskletStep) {
+			taskletStep.setTransactionAttribute(transactionAttribute);
 		}
 
 		return step;
