@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.springframework.batch.core.BatchStatus;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 /**
@@ -28,7 +30,10 @@ public class BatchLaunchResultModel implements Serializable {
 	private BatchStatus status;
 	private String exitCode;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
 	private Date startTime;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
 	private Date endTime;
 
 	public BatchLaunchResultModel() {
