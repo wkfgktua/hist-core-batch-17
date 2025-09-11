@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.uuid.Generators;
 import com.hist.batch.common.config.RunningJobFactory;
 import com.hist.batch.common.log.BatchLog;
 import com.hist.batch.common.log.BatchLogFactory;
@@ -46,11 +45,13 @@ public class DefaultJobExecutionListener implements JobExecutionListener, Initia
 		RunningJobFactory.addJob(jobExecution);
 		BatchLogFactory.setLogAvailable(jobExecution);
 
-		String traceId = MDCUtils.get(MDCUtils.TRACE_ID);
-		if (traceId == null || "".equals(traceId)) {
-			traceId = Generators.timeBasedGenerator().generate().toString();
-		}
-		MDCUtils.set(MDCUtils.TRACE_ID, traceId);
+//		String traceId = MDCUtils.get(MDCUtils.TRACE_ID);
+//		if (traceId == null || "".equals(traceId)) {
+//			traceId = Generators.timeBasedGenerator().generate().toString();
+//		}
+//		MDCUtils.set(MDCUtils.TRACE_ID, traceId);
+
+		MDCUtils.set(MDCUtils.SERVICE_NAME, jobExecution.getJobInstance().getJobName());
 
 		JobParameters jobParam = jobExecution.getJobParameters();
 		if(jobParam != null && "Y".equals(jobParam.getString("multiYn")) && jobParam.getString("exeId") != null && jobParam.getString("exeId").matches("\\d+") && jobParam.getString("multiCount") != null && jobParam.getString("multiCount").matches("\\d+")) {
