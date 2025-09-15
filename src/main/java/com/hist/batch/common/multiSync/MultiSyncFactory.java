@@ -37,11 +37,11 @@ public class MultiSyncFactory {
 	public static void setMultiSync(JobExecution je) {
 		synchronized (multiSyncMap) {
 			if (!multiSyncMap.containsKey(je)) {
-				if (je != null && je.getJobParameters().getString("exeId") != null && je.getJobParameters().getString("exeId").matches("\\d+") && je.getJobParameters().getString("multiCount") != null && je.getJobParameters().getString("multiCount").matches("\\d+")) {
+				if (je != null && je.getJobParameters().getString("exeId") != null && je.getJobParameters().getString("exeId").matches("\\d+") && je.getJobParameters().getString("groupKey") != null && je.getJobParameters().getString("groupKey").matches("\\d+") && je.getJobParameters().getString("multiCount") != null && je.getJobParameters().getString("multiCount").matches("\\d+")) {
 					if(je.getJobParameters().getString("timeOutSec") != null && je.getJobParameters().getString("timeOutSec").matches("\\d+")) {
-						multiSyncMap.put(je, new MultiSync(Long.parseLong(je.getJobParameters().getString("exeId")), je.getId(), Long.parseLong(je.getJobParameters().getString("multiCount")), Long.parseLong(je.getJobParameters().getString("timeOutSec"))));
+						multiSyncMap.put(je, new MultiSync(Long.parseLong(je.getJobParameters().getString("exeId")), Long.parseLong(je.getJobParameters().getString("groupKey")), je.getId(), Long.parseLong(je.getJobParameters().getString("multiCount")), Long.parseLong(je.getJobParameters().getString("timeOutSec"))));
 					} else {
-						multiSyncMap.put(je, new MultiSync(Long.parseLong(je.getJobParameters().getString("exeId")), je.getId(), Long.parseLong(je.getJobParameters().getString("multiCount"))));
+						multiSyncMap.put(je, new MultiSync(Long.parseLong(je.getJobParameters().getString("exeId")), Long.parseLong(je.getJobParameters().getString("groupKey")), je.getId(), Long.parseLong(je.getJobParameters().getString("multiCount"))));
 					}
 				}
 			} else {

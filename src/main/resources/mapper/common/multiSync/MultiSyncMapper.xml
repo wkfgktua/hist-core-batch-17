@@ -4,11 +4,13 @@
 	<insert id="insertMultiSync" parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="msId">
 		INSERT INTO multi_sync (
 			exe_id
+			, group_key
 			, job_execution_id
 		<if test='status != null and status != ""'>, status</if>
 			, multi_count
 		) VALUES (
 			${exeId}
+			, ${groupKey}
 			, ${jobExecutionId}
 		<if test='status != null and status != ""'>, #{status}</if>
 			, ${multiCount}		)
@@ -18,6 +20,7 @@
 		SELECT count(1) cnt
 		FROM multi_sync
 		WHERE exe_id  = ${exeId}
+			AND group_key = ${groupKey}
 			AND status IN ('END', 'FIN')
 	</select>
 
@@ -25,6 +28,7 @@
 		SELECT count(1) cnt
 		FROM multi_sync
 		WHERE exe_id  = ${exeId}
+			AND group_key = ${groupKey}
 			AND status = 'FAIL'
 	</select>
 

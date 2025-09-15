@@ -30,7 +30,7 @@ public class MultiSync {
 
 	private long multiCount;
 	//private long exeId;
-	private long jobExecutionId;
+	//private long jobExecutionId;
 	private long timeOutSec;
 	private boolean endYn;
 
@@ -41,17 +41,17 @@ public class MultiSync {
 	private MultiSyncService multiSyncService;
 
 
-	public MultiSync(long exeId, long jobExecutionId, long multiCount) {
-		init(exeId, jobExecutionId, multiCount,  3600);
+	public MultiSync(long exeId, long groupKey, long jobExecutionId, long multiCount) {
+		init(exeId, groupKey, jobExecutionId, multiCount,  3600);
 	}
 
-	public MultiSync(long exeId, long jobExecutionId, long multiCount,  long timeOutSec) {
-		init(exeId, jobExecutionId, multiCount,  timeOutSec);
+	public MultiSync(long exeId, long groupKey, long jobExecutionId, long multiCount,  long timeOutSec) {
+		init(exeId, groupKey, jobExecutionId, multiCount,  timeOutSec);
 	}
 
-	private void init(long exeId, long jobExecutionId, long multiCount,  long timeOutSec) {
+	private void init(long exeId, long groupKey, long jobExecutionId, long multiCount,  long timeOutSec) {
 		//this.exeId = exeId;
-		this.jobExecutionId = jobExecutionId;
+		//this.jobExecutionId = jobExecutionId;
 		this.multiCount = multiCount;
 		this.timeOutSec = timeOutSec;
 		this.endYn = false;
@@ -60,7 +60,8 @@ public class MultiSync {
 		this.multiSyncService = (MultiSyncService) BeanUtils.getBean(MultiSyncService.class);
 
 		paramMap.put("exeId", String.valueOf(exeId));
-		paramMap.put("jobExecutionId", String.valueOf(this.jobExecutionId));
+		paramMap.put("groupKey", String.valueOf(groupKey));
+		paramMap.put("jobExecutionId", String.valueOf(jobExecutionId));
 		paramMap.put("multiCount", String.valueOf(this.multiCount));
 		paramMap.put("timeOutSec", String.valueOf(this.timeOutSec));
 		paramMap.put("status", Status.START.name());

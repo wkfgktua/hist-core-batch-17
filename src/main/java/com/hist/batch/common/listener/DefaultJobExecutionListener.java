@@ -54,7 +54,7 @@ public class DefaultJobExecutionListener implements JobExecutionListener, Initia
 		MDCUtils.set(MDCUtils.SERVICE_NAME, jobExecution.getJobInstance().getJobName());
 
 		JobParameters jobParam = jobExecution.getJobParameters();
-		if(jobParam != null && "Y".equals(jobParam.getString("multiYn")) && jobParam.getString("exeId") != null && jobParam.getString("exeId").matches("\\d+") && jobParam.getString("multiCount") != null && jobParam.getString("multiCount").matches("\\d+")) {
+		if(jobParam != null && "Y".equals(jobParam.getString("multiYn")) && jobParam.getString("exeId") != null && jobParam.getString("exeId").matches("\\d+") && jobParam.getString("groupKey") != null && jobParam.getString("groupKey").matches("\\d+") && jobParam.getString("multiCount") != null && jobParam.getString("multiCount").matches("\\d+")) {
 			MultiSyncFactory.setMultiSync(jobExecution);
 		}
 	}
