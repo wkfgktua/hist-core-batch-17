@@ -123,12 +123,17 @@ public class JobLaunchHelper {
 
 			switch(je.getStatus()) {
 				case COMPLETED:
-					if (batchLog.isHasError()) {
-						rv.setCode(knownErrorCode);
-						rv.setMessage(batchLog.toString());
+					if ("COMPLETED".equals(je.getExitStatus().getExitCode())) {
+						if (batchLog.isHasError()) {
+							rv.setCode(knownErrorCode);
+							rv.setMessage(batchLog.toString());
+						} else {
+							rv.setCode(successDefaultCode);
+							rv.setMessage(batchLog.toString());
+						}
 					} else {
-						rv.setCode(successDefaultCode);
-						rv.setMessage(batchLog.toString());
+						rv.setCode(unKnownErrorCode);
+						rv.setMessage(batchLog.toString() + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
 					}
 					break;
 				case STOPPED:
@@ -161,7 +166,11 @@ public class JobLaunchHelper {
 		} else {
 			switch(je.getStatus()) {
 				case COMPLETED:
-					rv.setCode(successDefaultCode);
+					if ("COMPLETED".equals(je.getExitStatus().getExitCode())) {
+						rv.setCode(successDefaultCode);
+					} else {
+						rv.setCode(unKnownErrorCode);
+					}
 					break;
 				case STOPPED:
 					if ("COMPLETED".equals(je.getExitStatus().getExitCode())) {
