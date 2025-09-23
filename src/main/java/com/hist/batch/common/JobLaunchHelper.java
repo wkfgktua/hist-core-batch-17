@@ -153,7 +153,6 @@ public class JobLaunchHelper {
 				case STARTED:
 				case STARTING:
 					rv.setCode(asyncStarted);
-					rv.setMessage("Async Job Starting.");
 					break;
 				case FAILED:
 					rv.setCode(unKnownErrorCode);
@@ -182,7 +181,6 @@ public class JobLaunchHelper {
 				case STARTED:
 				case STARTING:
 					rv.setCode(asyncStarted);
-					rv.setMessage("Async Job Starting.");
 					break;
 				case FAILED:
 					rv.setCode(unKnownErrorCode);
