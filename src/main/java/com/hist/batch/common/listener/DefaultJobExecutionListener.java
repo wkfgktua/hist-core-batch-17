@@ -18,6 +18,7 @@ import com.hist.batch.common.log.BatchLog;
 import com.hist.batch.common.log.BatchLogFactory;
 import com.hist.batch.common.multiSync.MultiSync;
 import com.hist.batch.common.multiSync.MultiSyncFactory;
+import com.hist.batch.common.util.StrUtil;
 import com.hist.core.util.MDCUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +74,8 @@ public class DefaultJobExecutionListener implements JobExecutionListener, Initia
 			Map<String, Object> logMap = new HashMap<String, Object>();
 			logMap.put("totalCnt", String.valueOf(batchLog.getTotalCnt()));
 			logMap.put("errorCnt", String.valueOf(batchLog.getErrorCnt()));
-			logMap.put("message", batchLog.toString());
+			//logMap.put("message", batchLog.toString());
+			logMap.put("message", StrUtil.truncateWithEllipsis(batchLog.toString(), 2400));
 
 			if (batchLog.hasParams()) {
 				try {
