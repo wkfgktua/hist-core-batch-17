@@ -16,6 +16,7 @@ import com.hist.batch.common.cons.BatchConst;
 import com.hist.batch.common.log.BatchLog;
 import com.hist.batch.common.log.BatchLogFactory;
 import com.hist.batch.common.model.BatchLaunchResultModel;
+import com.hist.batch.common.util.StrUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -126,10 +127,10 @@ public class JobLaunchHelper {
 					if ("COMPLETED".equals(je.getExitStatus().getExitCode())) {
 						if (batchLog.isHasError()) {
 							rv.setCode(knownErrorCode);
-							rv.setMessage(batchLog.toString());
+							rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240));
 						} else {
 							rv.setCode(successDefaultCode);
-							rv.setMessage(batchLog.toString());
+							rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240));
 						}
 					} else {
 						rv.setCode(unKnownErrorCode);
@@ -140,10 +141,10 @@ public class JobLaunchHelper {
 					if ("COMPLETED".equals(je.getExitStatus().getExitCode())) {
 						if (batchLog.isHasError()) {
 							rv.setCode(knownErrorCode);
-							rv.setMessage(batchLog.toString());
+							rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240));
 						} else {
 							rv.setCode(successDefaultCode);
-							rv.setMessage(batchLog.toString());
+							rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240));
 						}
 					} else {
 						rv.setCode(unKnownErrorCode);
