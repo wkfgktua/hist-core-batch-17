@@ -13,6 +13,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class ShutdownJobListener implements ApplicationListener<ContextClosedEvent> {
 
@@ -25,6 +28,7 @@ public class ShutdownJobListener implements ApplicationListener<ContextClosedEve
 	@Override
 	public void onApplicationEvent(ContextClosedEvent event) {
 		for (JobExecution je : RunningJobFactory.getRunningJob()) {
+			log.error("Graceful Shutdown Job Status update id : " + je.getId() + ", je.isRunning() : " + je.isRunning() + ", je.getStatus() : " + je.getStatus());
 			if (je.isRunning() && je.getStatus() == BatchStatus.STARTED) {
 				je.setStatus(BatchStatus.STOPPING);
 				je.setExitStatus(new ExitStatus("WAS_SHUTDOWN", "Job stopped due to WAS shutdown after await :" + timeoutPerShutdownPhase.toMillis()));
