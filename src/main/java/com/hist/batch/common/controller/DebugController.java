@@ -58,9 +58,9 @@ public class DebugController {
 		return new ResponseEntity<String>(html, HttpStatus.OK);
 	}
 
-	@GetMapping("/getJobList")
-	public ResponseEntity<String> getJobList() {
-		String html = "Batch Job 모니터링.";
+	@GetMapping("/getJobAllList")
+	public ResponseEntity<String> getJobAllList() {
+		String html = "Batch Job 전체 모니터링.";
 
 		List<String> jobNames = jobExplorer.getJobNames();
 
@@ -76,6 +76,17 @@ public class DebugController {
 					html += "<br/>-------------------------------------";
 				}
 			}
+		}
+
+		return new ResponseEntity<String>(html, HttpStatus.OK);
+	}
+
+	@GetMapping("/getJobList")
+	public ResponseEntity<String> getJobList() {
+		String html = "Batch Job 모니터링.";
+
+		for (JobExecution je : RunningJobFactory.getRunningJob()) {
+			html += "\n<br/>job id : " + je.getId() + ", job name : " + je.getJobInstance().getJobName() + ", status : " + je.getStatus() + ", start time : " + je.getStartTime();
 		}
 
 		return new ResponseEntity<String>(html, HttpStatus.OK);
