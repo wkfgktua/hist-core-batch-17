@@ -84,8 +84,9 @@ public class DebugController {
 	@GetMapping("/getJobList")
 	public ResponseEntity<String> getJobList() {
 		String html = "Batch Job 모니터링.";
-		html += "\n<br/>Graceful Shutdown RunningJobFactory count :" + RunningJobFactory.getSize();
-		html += "\n<br/>Graceful Shutdown RunningJobFactory list :" + RunningJobFactory.getRunningJob();
+		html += "\n<br/>RunningJobFactory count :" + RunningJobFactory.getSize();
+		html += "\n<br/>RunningJobFactory list :" + RunningJobFactory.getRunningJob();
+		html += "\n<br/>";
 
 		for (JobExecution je : RunningJobFactory.getRunningJob()) {
 			if (je == null) {
