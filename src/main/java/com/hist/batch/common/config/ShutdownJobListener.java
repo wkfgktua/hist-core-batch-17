@@ -27,13 +27,20 @@ public class ShutdownJobListener implements ApplicationListener<ContextClosedEve
 
 	@Override
 	public void onApplicationEvent(ContextClosedEvent event) {
+		log.error("Graceful Shutdown RunningJobFactory count :" + RunningJobFactory.getSize());
+		log.error("Graceful Shutdown RunningJobFactory list :" + RunningJobFactory.getRunningJob());
+
 		for (JobExecution je : RunningJobFactory.getRunningJob()) {
-			log.error("Graceful Shutdown Job Status update id : " + je.getId() + ", je.isRunning() : " + je.isRunning() + ", je.getStatus() : " + je.getStatus());
-			if (je.isRunning() && je.getStatus() == BatchStatus.STARTED) {
-				je.setStatus(BatchStatus.STOPPING);
-				je.setExitStatus(new ExitStatus("WAS_SHUTDOWN", "Job stopped due to WAS shutdown after await :" + timeoutPerShutdownPhase.toMillis()));
-				je.setEndTime(new Date());
-	            jobRepository.update(je);
+			if (je == null) {
+				log.error("Graceful Shutdown je is null !!");
+			} else {
+				log.error("Graceful Shutdown Job Status update id : " + je.getId() + ", je.isRunning() : " + je.isRunning() + ", je.getStatus() : " + je.getStatus());
+				if (je.isRunning() && je.getStatus() == BatchStatus.STARTED) {
+					je.setStatus(BatchStatus.STOPPING);
+					je.setExitStatus(new ExitStatus("WAS_SHUTDOWN", "Job stopped due to WAS shutdown after await :" + timeoutPerShutdownPhase.toMillis()));
+					je.setEndTime(new Date());
+		            jobRepository.update(je);
+				}
 			}
 		}
 	}
