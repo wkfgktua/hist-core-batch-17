@@ -83,19 +83,26 @@ public class DebugController {
 
 	@GetMapping("/getJobList")
 	public ResponseEntity<String> getJobList() {
-		String html = "Batch Job 모니터링.";
-		html += "\n<br/>RunningJobFactory count :" + RunningJobFactory.getSize();
-		html += "\n<br/>RunningJobFactory list :" + RunningJobFactory.getRunningJob();
-		html += "\n<br/>";
+		StringBuilder html = new StringBuilder("Batch Job 모니터링.");
+	    List<JobExecution> jobs = RunningJobFactory.getRunningJob();
 
-		for (JobExecution je : RunningJobFactory.getRunningJob()) {
-			if (je == null) {
-				html += "\n<br/>je is null !!";
-			} else {
-				html += "\n<br/>job id : " + je.getId() + ", job name : " + je.getJobInstance().getJobName() + ", status : " + je.getStatus() + ", start time : " + je.getStartTime();
-			}
-		}
+	    html.append("\n<br/>RunningJobFactory count :").append(jobs.size());
+	    html.append("\n<br/>RunningJobFactory list :").append(jobs);
+	    html.append("\n<br/>");
 
-		return new ResponseEntity<String>(html, HttpStatus.OK);
+	    synchronized (jobs) {
+	        for (JobExecution je : jobs) {
+	            if (je == null) {
+	                html.append("\n<br/>je is null !!");
+	            } else {
+	                html.append("\n<br/>job id : ").append(je.getId())
+	                    .append(", job name : ").append(je.getJobInstance().getJobName())
+	                    .append(", status : ").append(je.getStatus())
+	                    .append(", start time : ").append(je.getStartTime());
+	            }
+	        }
+	    }
+
+	    return new ResponseEntity<>(html.toString(), HttpStatus.OK);
 	}
 }

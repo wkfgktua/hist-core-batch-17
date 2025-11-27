@@ -1,12 +1,14 @@
 package com.hist.batch.common.config;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.batch.core.JobExecution;
 
 public class RunningJobFactory {
-	private static final List<JobExecution> runningJobList = new ArrayList<>();
+	//private static final List<JobExecution> runningJobList = new ArrayList<>();
+	private static final List<JobExecution> runningJobList = Collections.synchronizedList(new ArrayList<>());
 
 	public static int addJob(JobExecution je) {
 		runningJobList.add(je);

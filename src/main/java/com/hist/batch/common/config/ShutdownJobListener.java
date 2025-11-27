@@ -2,6 +2,7 @@ package com.hist.batch.common.config;
 
 import java.time.Duration;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.ExitStatus;
@@ -27,21 +28,25 @@ public class ShutdownJobListener implements ApplicationListener<ContextClosedEve
 
 	@Override
 	public void onApplicationEvent(ContextClosedEvent event) {
-		log.error("Graceful Shutdown RunningJobFactory count :" + RunningJobFactory.getSize());
-		log.error("Graceful Shutdown RunningJobFactory list :" + RunningJobFactory.getRunningJob());
+		List<JobExecution> jobs = RunningJobFactory.getRunningJob();
 
-		for (JobExecution je : RunningJobFactory.getRunningJob()) {
-			if (je == null) {
-				log.error("Graceful Shutdown je is null !!");
-			} else {
-				log.error("Graceful Shutdown Job Status update id : " + je.getId() + ", je.isRunning() : " + je.isRunning() + ", je.getStatus() : " + je.getStatus());
-				if (je.isRunning() && je.getStatus() == BatchStatus.STARTED) {
-					je.setStatus(BatchStatus.STOPPING);
-					je.setExitStatus(new ExitStatus("WAS_SHUTDOWN", "Job stopped due to WAS shutdown after await :" + timeoutPerShutdownPhase.toMillis()));
-					je.setEndTime(new Date());
-		            jobRepository.update(je);
-				}
-			}
-		}
+		log.error("Graceful Shutdown RunningJobFactory count :" + jobs.size());
+		log.error("Graceful Shutdown RunningJobFactory list :" + jobs);
+
+		synchronized (jobs) {
+	        for (JobExecution je : jobs) {
+	            if (je == null) {
+	            	log.error("Graceful Shutdown je is null !!");
+	            } else {
+	            	log.error("Graceful Shutdown Job Status update id : " + je.getId() + ", je.isRunning() : " + je.isRunning() + ", je.getStatus() : " + je.getStatus());
+					if (je.isRunning() && je.getStatus() == BatchStatus.STARTED) {
+						je.setStatus(BatchStatus.STOPPING);
+						je.setExitStatus(new ExitStatus("WAS_SHUTDOWN", "Job stopped due to WAS shutdown after await :" + timeoutPerShutdownPhase.toMillis()));
+						je.setEndTime(new Date());
+			            jobRepository.update(je);
+					}
+	            }
+	        }
+	    }
 	}
 }
