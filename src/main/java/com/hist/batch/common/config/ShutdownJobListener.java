@@ -39,11 +39,15 @@ public class ShutdownJobListener implements ApplicationListener<ContextClosedEve
 	            	log.error("Graceful Shutdown je is null !!");
 	            } else {
 	            	log.error("Graceful Shutdown Job Status update id : " + je.getId() + ", je.isRunning() : " + je.isRunning() + ", je.getStatus() : " + je.getStatus());
-					if (je.isRunning() && je.getStatus() == BatchStatus.STARTED) {
-						je.setStatus(BatchStatus.STOPPING);
-						je.setExitStatus(new ExitStatus("WAS_SHUTDOWN", "Job stopped due to WAS shutdown after await :" + timeoutPerShutdownPhase.toMillis()));
-						je.setEndTime(new Date());
-			            jobRepository.update(je);
+					try {
+		            	if (je.isRunning() && je.getStatus() == BatchStatus.STARTED) {
+							je.setStatus(BatchStatus.STOPPING);
+							je.setExitStatus(new ExitStatus("WAS_SHUTDOWN", "Job stopped due to WAS shutdown after await :" + timeoutPerShutdownPhase.toMillis()));
+							je.setEndTime(new Date());
+				            jobRepository.update(je);
+						}
+					} catch (Exception e) {
+						log.error("Graceful Shutdown je Stop Error : {}", e.getMessage());
 					}
 	            }
 	        }
