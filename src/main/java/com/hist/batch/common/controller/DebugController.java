@@ -84,9 +84,15 @@ public class DebugController {
 	@GetMapping("/getJobList")
 	public ResponseEntity<String> getJobList() {
 		String html = "Batch Job 모니터링.";
+		html += "\n<br/>Graceful Shutdown RunningJobFactory count :" + RunningJobFactory.getSize();
+		html += "\n<br/>Graceful Shutdown RunningJobFactory list :" + RunningJobFactory.getRunningJob();
 
 		for (JobExecution je : RunningJobFactory.getRunningJob()) {
-			html += "\n<br/>job id : " + je.getId() + ", job name : " + je.getJobInstance().getJobName() + ", status : " + je.getStatus() + ", start time : " + je.getStartTime();
+			if (je == null) {
+				html += "\n<br/>je is null !!";
+			} else {
+				html += "\n<br/>job id : " + je.getId() + ", job name : " + je.getJobInstance().getJobName() + ", status : " + je.getStatus() + ", start time : " + je.getStartTime();
+			}
 		}
 
 		return new ResponseEntity<String>(html, HttpStatus.OK);
