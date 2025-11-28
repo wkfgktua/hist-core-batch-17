@@ -25,60 +25,93 @@ public class DebugController {
 
 	@GetMapping("/")
 	public ResponseEntity<String> runningJobList() {
-		String html = "BatchLog, MultiSync 모니터링.";
+		StringBuilder html = new StringBuilder("BatchLog, MultiSync 모니터링.");
 
 		Set<JobExecution> batchLogKeySet = BatchLogFactory.getKeySet();
 
 		if (!batchLogKeySet.isEmpty()) {
-			html += "<br/><br/>[BatchLog Data] <br/><br/>";
-			for (JobExecution key : batchLogKeySet) {
-				html += "key : " + key.getId();
-				html += "<br/>";
-			}
+			html.append("\n\n<br/><br/>[BatchLog Data] <br/><br/>");
+
+			synchronized (batchLogKeySet) {
+		        for (JobExecution je : batchLogKeySet) {
+		            if (je == null) {
+		                html.append("\n<br/>je is null !!");
+		            } else {
+		                html.append("\n<br/>job id : ").append(je.getId())
+		                    .append(", job name : ").append(je.getJobInstance().getJobName())
+		                    .append(", status : ").append(je.getStatus())
+		                    .append(", start time : ").append(je.getStartTime());
+		            }
+		        }
+		    }
 		}
 
 		Set<JobExecution> multiSyncKeySet = MultiSyncFactory.getKeySet();
-
 		if (!multiSyncKeySet.isEmpty()) {
-			html += "<br/><br/>[MultiSync Data] <br/><br/>";
-			for (JobExecution key : multiSyncKeySet) {
-				html += "key : " + key.getId();
-				html += "<br/>";
-			}
+			html.append("\n\n<br/><br/>[MultiSync Data] <br/><br/>");
+			synchronized (multiSyncKeySet) {
+		        for (JobExecution je : multiSyncKeySet) {
+		            if (je == null) {
+		                html.append("\n<br/>je is null !!");
+		            } else {
+		                html.append("\n<br/>job id : ").append(je.getId())
+		                    .append(", job name : ").append(je.getJobInstance().getJobName())
+		                    .append(", status : ").append(je.getStatus())
+		                    .append(", start time : ").append(je.getStartTime());
+		            }
+		        }
+		    }
 		}
 
 		if (RunningJobFactory.getSize() > 0) {
-			html += "<br/><br/>[Running Job List] <br/><br/>";
-			for (JobExecution je : RunningJobFactory.getRunningJob()) {
-				html += "JobExecution : " + je.toString();
-				html += "<br/>";
-			}
+			html.append("\n\n<br/><br/>[Running Job List] <br/><br/>");
+			List<JobExecution> jobs = RunningJobFactory.getRunningJob();
+
+			synchronized (jobs) {
+		        for (JobExecution je : jobs) {
+		            if (je == null) {
+		                html.append("\n<br/>je is null !!");
+		            } else {
+		                html.append("\n<br/>job id : ").append(je.getId())
+		                    .append(", job name : ").append(je.getJobInstance().getJobName())
+		                    .append(", status : ").append(je.getStatus())
+		                    .append(", start time : ").append(je.getStartTime());
+		            }
+		        }
+		    }
 		}
 
-		return new ResponseEntity<String>(html, HttpStatus.OK);
+		return new ResponseEntity<String>(html.toString(), HttpStatus.OK);
 	}
 
 	@GetMapping("/getJobAllList")
 	public ResponseEntity<String> getJobAllList() {
-		String html = "Batch Job 전체 모니터링.";
+		StringBuilder html = new StringBuilder("Batch Job 전체 모니터링.");
 
 		List<String> jobNames = jobExplorer.getJobNames();
 
 		for (String jobName : jobNames) {
 			Set<JobExecution> jobExecutions = jobExplorer.findRunningJobExecutions(jobName);
-			for (JobExecution jobExecution : jobExecutions) {
-				if (jobExecution.isRunning()) {
-					html += "<br/><br/>[Running Job]";
-					html += "<br/>Job Execution ID: " + jobExecution.getId();
-					html += "<br/>Job Name: " + jobName;
-					html += "<br/>Status: " + jobExecution.getStatus();
-					html += "<br/>Start Time: " + jobExecution.getStartTime();
-					html += "<br/>-------------------------------------";
-				}
+
+			if (!jobExecutions.isEmpty()) {
+				html.append("\n<br/>[Running Job] jobName : ").append(jobName);
+
+				synchronized (jobExecutions) {
+			        for (JobExecution je : jobExecutions) {
+			            if (je == null) {
+			                html.append("\n<br/>je is null !!");
+			            } else {
+			                html.append("\n<br/>job id : ").append(je.getId())
+			                    .append(", job name : ").append(je.getJobInstance().getJobName())
+			                    .append(", status : ").append(je.getStatus())
+			                    .append(", start time : ").append(je.getStartTime());
+			            }
+			        }
+			    }
 			}
 		}
 
-		return new ResponseEntity<String>(html, HttpStatus.OK);
+		return new ResponseEntity<String>(html.toString(), HttpStatus.OK);
 	}
 
 	@GetMapping("/getJobList")
