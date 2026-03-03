@@ -14,8 +14,7 @@ public class StrUtil {
 			return input;
 		}
 
-		int limit = maxLength - 3;
-		return input.substring(0, limit) + "...";
+		return input.substring(0, (maxLength-3)) + "...";
 	}
 
 	public static String truncateByBytesWithEllipsis(String input, int maxBytes) {
