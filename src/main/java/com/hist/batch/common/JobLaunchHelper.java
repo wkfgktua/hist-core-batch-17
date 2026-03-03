@@ -134,7 +134,7 @@ public class JobLaunchHelper {
 						}
 					} else {
 						rv.setCode(unKnownErrorCode);
-						rv.setMessage(batchLog.toString() + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
+						rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
 					}
 					break;
 				case STOPPED:
@@ -148,7 +148,7 @@ public class JobLaunchHelper {
 						}
 					} else {
 						rv.setCode(unKnownErrorCode);
-						rv.setMessage(batchLog.toString() + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
+						rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
 					}
 					break;
 				case STARTED:
@@ -157,11 +157,11 @@ public class JobLaunchHelper {
 					break;
 				case FAILED:
 					rv.setCode(unKnownErrorCode);
-					rv.setMessage(batchLog.toString() + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
+					rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
 					break;
 				default:
 					rv.setCode(unKnownErrorCode);
-					rv.setMessage(batchLog.toString() + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
+					rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
 			}
 		} else {
 			switch(je.getStatus()) {

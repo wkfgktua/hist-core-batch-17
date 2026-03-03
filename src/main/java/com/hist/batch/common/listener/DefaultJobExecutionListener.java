@@ -69,24 +69,24 @@ public class DefaultJobExecutionListener implements JobExecutionListener, Initia
 		RunningJobFactory.removeJob(jobExecution);
 
 		if (BatchLogFactory.isLogExist(jobExecution)) {
-			BatchLog batchLog = BatchLogFactory.getLog(jobExecution);
-
-			Map<String, Object> logMap = new HashMap<String, Object>();
-			logMap.put("totalCnt", String.valueOf(batchLog.getTotalCnt()));
-			logMap.put("errorCnt", String.valueOf(batchLog.getErrorCnt()));
-			//logMap.put("message", batchLog.toString());
-			logMap.put("message", StrUtil.truncateWithEllipsis(batchLog.toString(), 2400));
-
-			if (batchLog.hasParams()) {
-				try {
-					logMap.put("param", (objectMapper.writeValueAsString(batchLog.getParam())));
-				} catch (JsonProcessingException e) {
-					log.error("Parsing error afterJob BatchLog : {}, jobExecutionId : {}", e.getMessage(), jobExecution.getId());
-				}
-			}
 
 			if("COMPLETED".equals(jobExecution.getExitStatus().getExitCode())) {
+				BatchLog batchLog = BatchLogFactory.getLog(jobExecution);
+
+				Map<String, Object> logMap = new HashMap<String, Object>();
+				logMap.put("totalCnt", String.valueOf(batchLog.getTotalCnt()));
+				logMap.put("errorCnt", String.valueOf(batchLog.getErrorCnt()));
+
 				try {
+					if (batchLog.hasParams()) {
+						logMap.put("param", objectMapper.writeValueAsString(batchLog.getParam()));
+					}
+
+					int availableSpace = 2500 - (objectMapper.writeValueAsString(logMap).length()) - 15;
+					if (availableSpace > 0) {
+						logMap.put("message", StrUtil.truncateForJsonWithEllipsis(batchLog.toString(), availableSpace));
+					}
+
 					jobExecution.setExitStatus(new ExitStatus(jobExecution.getExitStatus().getExitCode(), objectMapper.writeValueAsString(logMap)));
 				} catch (JsonProcessingException e) {
 					log.error("Parsing error afterJob BatchLog : {}, jobExecutionId : {}", e.getMessage(), jobExecution.getId());
