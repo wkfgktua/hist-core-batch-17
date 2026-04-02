@@ -11,6 +11,8 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import com.hist.batch.common.multiSync.MultiSync.Status;
 import com.hist.batch.common.multiSync.exception.MultiSyncException;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @Desc	 : 배치 멀티 병렬처리 싱크 팩토리
  * @DBAccess :
@@ -20,6 +22,7 @@ import com.hist.batch.common.multiSync.exception.MultiSyncException;
  * @Author   : dlehdusmusic@histmate.co.kr
  *
  */
+@Slf4j
 public class MultiSyncFactory {
 
 	private static final Map<JobExecution, MultiSync> multiSyncMap = new HashMap<>();
@@ -134,7 +137,9 @@ public class MultiSyncFactory {
 		if(isMultiSyncExist(cc.getStepContext().getStepExecution().getJobExecution())) {
 			return getMultiSync(cc).sync();
 		} else {
-			throw new MultiSyncException("Multi Sync Not Exist.");
+			//throw new MultiSyncException("Multi Sync Not Exist.");
+			log.warn("Multi Sync Not Exist. sync JobExecutionId : " + cc.getStepContext().getStepExecution().getJobExecutionId());
+			return Status.FIN;
 		}
 	}
 
@@ -142,7 +147,9 @@ public class MultiSyncFactory {
 		if(isMultiSyncExist(cc.getStepContext().getStepExecution().getJobExecution())) {
 			return getMultiSync(cc).setEndYn();
 		} else {
-			throw new MultiSyncException("Multi Sync Not Exist.");
+			//throw new MultiSyncException("Multi Sync Not Exist.");
+			log.warn("Multi Sync Not Exist. end JobExecutionId : " + cc.getStepContext().getStepExecution().getJobExecutionId());
+			return true;
 		}
 	}
 }
