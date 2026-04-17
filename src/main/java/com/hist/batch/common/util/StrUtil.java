@@ -28,31 +28,45 @@ public class StrUtil {
 		return input.substring(0, endIndex) + "...";
 	}
 
+	// JSON 직렬화 시 2글자로 늘어나는 이스케이프 문자들 처리 (\n, \r, \t, \\, \")
+	private static boolean needsEscape(char c) {
+		return c == '"' || c == '\\' || c == '\n' || c == '\r' || c == '\t';
+	}
+
+	public static int getJsonLength(String input) {
+		if (input == null) {
+			return 0;
+		}
+
+		int length = 0;
+		for (char c : input.toCharArray()) {
+			length += needsEscape(c) ? 2 : 1;
+		}
+
+		return length;
+	}
+
 	public static String truncateForJsonWithEllipsis(String input, int maxChars) {
-		if (input == null || input.isEmpty()) {
-			return input;
-		}
+		if (input == null || maxChars <= 0) return input == null ? null : "";
 
-		StringBuilder sb = new StringBuilder();
-		int estimatedJsonLength = 0;
-		int limit = maxChars - 3;
+		int len = 0, safeIdx = 0, strictIdx = 0;
+		char[] chars = input.toCharArray();
 
-		for (int i = 0; i < input.length(); i++) {
-			char c = input.charAt(i);
+		for (int i = 0; i < chars.length; i++) {
+			int charLen = needsEscape(chars[i]) ? 2 : 1;
 
-			// JSON 직렬화 시 2글자로 늘어나는 이스케이프 문자들 처리 (\n, \r, \t, \\, \")
-			if (c == '\n' || c == '\r' || c == '\t' || c == '\\' || c == '"') {
-				estimatedJsonLength += 2;
-			} else {
-				estimatedJsonLength += 1;
+			if (len + charLen > maxChars) {
+				return maxChars <= 3 ? new String(chars, 0, strictIdx) : new String(chars, 0, safeIdx) + "...";
 			}
 
-			if (estimatedJsonLength > limit) {
-				return sb.toString() + "...";
+			len += charLen;
+			strictIdx = i + 1;
+
+			if (len <= maxChars - 3) {
+				safeIdx = i + 1;
 			}
-			sb.append(c);
 		}
 
-		return sb.toString();
+		return input;
 	}
 }
