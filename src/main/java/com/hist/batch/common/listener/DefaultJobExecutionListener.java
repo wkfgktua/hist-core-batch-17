@@ -153,13 +153,14 @@ public class DefaultJobExecutionListener implements JobExecutionListener, Initia
 		}
 
 		// 실패(Failed) 상태일 경우 Exception 메시지 병합
+		boolean hasBatchLog = batchLog.toString().length() > 0 ? true : false;
 		String exceptionsStr = jobExecution.getAllFailureExceptions().toString();
-		int exceptionJsonLen = StrUtil.getJsonLength(exceptionsStr) + 2;
+		int exceptionJsonLen = StrUtil.getJsonLength(exceptionsStr) + (hasBatchLog ? 2 : 0);
 
 		if (availableSpace > exceptionJsonLen) {
 			availableSpace -= exceptionJsonLen;
 			String truncatedLog = StrUtil.truncateForJsonWithEllipsis(batchLog.toString(), availableSpace);
-			logMap.put("message", truncatedLog + BatchConst.BATCH_LOG_SEPERATOR + exceptionsStr);
+			logMap.put("message", truncatedLog + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + exceptionsStr);
 		} else {
 			logMap.put("message", StrUtil.truncateForJsonWithEllipsis(exceptionsStr, availableSpace));
 		}

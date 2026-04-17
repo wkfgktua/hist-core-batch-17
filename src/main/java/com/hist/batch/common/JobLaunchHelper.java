@@ -106,6 +106,7 @@ public class JobLaunchHelper {
 
 		if (BatchLogFactory.isLogExist(je)) {
 			BatchLog batchLog = BatchLogFactory.getLog(je);
+			boolean hasBatchLog = batchLog.toString().length() > 0 ? true : false;
 
 			rv.setTotalCnt(batchLog.getTotalCnt());
 			rv.setErrorCnt(batchLog.getErrorCnt());
@@ -134,7 +135,7 @@ public class JobLaunchHelper {
 						}
 					} else {
 						rv.setCode(unKnownErrorCode);
-						rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
+						rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + je.getAllFailureExceptions().toString());
 					}
 					break;
 				case STOPPED:
@@ -148,7 +149,7 @@ public class JobLaunchHelper {
 						}
 					} else {
 						rv.setCode(unKnownErrorCode);
-						rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
+						rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + je.getAllFailureExceptions().toString());
 					}
 					break;
 				case STARTED:
@@ -157,11 +158,11 @@ public class JobLaunchHelper {
 					break;
 				case FAILED:
 					rv.setCode(unKnownErrorCode);
-					rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
+					rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + je.getAllFailureExceptions().toString());
 					break;
 				default:
 					rv.setCode(unKnownErrorCode);
-					rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + BatchConst.BATCH_LOG_SEPERATOR + je.getAllFailureExceptions().toString());
+					rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + je.getAllFailureExceptions().toString());
 			}
 		} else {
 			switch(je.getStatus()) {
