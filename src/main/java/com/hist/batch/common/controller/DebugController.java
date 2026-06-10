@@ -1,5 +1,6 @@
 package com.hist.batch.common.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -45,34 +46,31 @@ public class DebugController {
 		Set<JobExecution> multiSyncKeySet = MultiSyncFactory.getKeySet();
 		if (!multiSyncKeySet.isEmpty()) {
 			html.append("\n\n<br/><br/>[MultiSync Data] <br/><br/>");
-			synchronized (multiSyncKeySet) {
-				for (JobExecution je : multiSyncKeySet) {
-					if (je == null) {
-						html.append("\n<br/>je is null !!");
-					} else {
-						html.append("\n<br/>job id : ").append(je.getId())
-							.append(", job name : ").append(je.getJobInstance().getJobName())
-							.append(", status : ").append(je.getStatus())
-							.append(", start time : ").append(je.getStartTime());
-					}
+			for (JobExecution je : multiSyncKeySet) {
+				if (je == null) {
+					html.append("\n<br/>je is null !!");
+				} else {
+					html.append("\n<br/>job id : ").append(je.getId())
+						.append(", job name : ").append(je.getJobInstance().getJobName())
+						.append(", status : ").append(je.getStatus())
+						.append(", start time : ").append(je.getStartTime());
 				}
 			}
 		}
 
 		if (RunningJobFactory.getSize() > 0) {
 			html.append("\n\n<br/><br/>[Running Job List] <br/><br/>");
+
 			List<JobExecution> jobs = RunningJobFactory.getRunningJob();
 
-			synchronized (jobs) {
-				for (JobExecution je : jobs) {
-					if (je == null) {
-						html.append("\n<br/>je is null !!");
-					} else {
-						html.append("\n<br/>job id : ").append(je.getId())
-							.append(", job name : ").append(je.getJobInstance().getJobName())
-							.append(", status : ").append(je.getStatus())
-							.append(", start time : ").append(je.getStartTime());
-					}
+			for (JobExecution je : jobs) {
+				if (je == null) {
+					html.append("\n<br/>je is null !!");
+				} else {
+					html.append("\n<br/>job id : ").append(je.getId())
+						.append(", job name : ").append(je.getJobInstance().getJobName())
+						.append(", status : ").append(je.getStatus())
+						.append(", start time : ").append(je.getStartTime());
 				}
 			}
 		}
@@ -92,22 +90,25 @@ public class DebugController {
 			if (!jobExecutions.isEmpty()) {
 				html.append("\n<br/>[Running Job] jobName : ").append(jobName);
 
+				List<JobExecution> safeList;
 				synchronized (jobExecutions) {
-					for (JobExecution je : jobExecutions) {
-						if (je == null) {
-							html.append("\n<br/>je is null !!");
-						} else {
-							html.append("\n<br/>job id : ").append(je.getId())
-								.append(", job name : ").append(je.getJobInstance().getJobName())
-								.append(", status : ").append(je.getStatus())
-								.append(", start time : ").append(je.getStartTime());
-						}
+					safeList = new ArrayList<>(jobExecutions);
+				}
+
+				for (JobExecution je : safeList) {
+					if (je == null) {
+						html.append("\n<br/>je is null !!");
+					} else {
+						html.append("\n<br/>job id : ").append(je.getId())
+							.append(", job name : ").append(je.getJobInstance().getJobName())
+							.append(", status : ").append(je.getStatus())
+							.append(", start time : ").append(je.getStartTime());
 					}
 				}
 			}
 		}
 
-		return new ResponseEntity<String>(html.toString(), HttpStatus.OK);
+		return new ResponseEntity<>(html.toString(), HttpStatus.OK);
 	}
 
 	@GetMapping("/getJobList")
@@ -119,16 +120,14 @@ public class DebugController {
 		html.append("\n<br/>RunningJobFactory list :").append(jobs);
 		html.append("\n<br/>");
 
-		synchronized (jobs) {
-			for (JobExecution je : jobs) {
-				if (je == null) {
-					html.append("\n<br/>je is null !!");
-				} else {
-					html.append("\n<br/>job id : ").append(je.getId())
-						.append(", job name : ").append(je.getJobInstance().getJobName())
-						.append(", status : ").append(je.getStatus())
-						.append(", start time : ").append(je.getStartTime());
-				}
+		for (JobExecution je : jobs) {
+			if (je == null) {
+				html.append("\n<br/>je is null !!");
+			} else {
+				html.append("\n<br/>job id : ").append(je.getId())
+					.append(", job name : ").append(je.getJobInstance().getJobName())
+					.append(", status : ").append(je.getStatus())
+					.append(", start time : ").append(je.getStartTime());
 			}
 		}
 
@@ -156,4 +155,27 @@ public class DebugController {
 
 		return new ResponseEntity<String>(html.toString(), HttpStatus.OK);
 	}
+
+	@GetMapping("/multiSync")
+	public ResponseEntity<String> multiSync() {
+		StringBuilder html = new StringBuilder("MultiSync 모니터링.");
+
+		Set<JobExecution> multiSyncKeySet = MultiSyncFactory.getKeySet();
+		if (!multiSyncKeySet.isEmpty()) {
+			html.append("\n\n<br/><br/>[MultiSync Data] <br/><br/>");
+			for (JobExecution je : multiSyncKeySet) {
+				if (je == null) {
+					html.append("\n<br/>je is null !!");
+				} else {
+					html.append("\n<br/>job id : ").append(je.getId())
+						.append(", job name : ").append(je.getJobInstance().getJobName())
+						.append(", status : ").append(je.getStatus())
+						.append(", start time : ").append(je.getStartTime());
+				}
+			}
+		}
+
+		return new ResponseEntity<String>(html.toString(), HttpStatus.OK);
+	}
+
 }

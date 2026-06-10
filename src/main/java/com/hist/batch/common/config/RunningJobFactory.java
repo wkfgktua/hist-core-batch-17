@@ -20,8 +20,14 @@ public class RunningJobFactory {
 		return runningJobList.size();
 	}
 
+//	public static List<JobExecution> getRunningJob() {
+//		return runningJobList;
+//	}
+
 	public static List<JobExecution> getRunningJob() {
-		return runningJobList;
+		synchronized (runningJobList) {
+			return new ArrayList<>(runningJobList);  // 복사본 반환
+		}
 	}
 
 	public static int getSize() {

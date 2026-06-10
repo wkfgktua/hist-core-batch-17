@@ -1,6 +1,7 @@
 package com.hist.batch.common.multiSync;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -130,7 +131,9 @@ public class MultiSyncFactory {
 	}
 
 	public static Set<JobExecution> getKeySet() {
-		return multiSyncMap.keySet();
+		synchronized (multiSyncMap) {
+			return new HashSet<>(multiSyncMap.keySet());
+		}
 	}
 
 	public static Status sync(ChunkContext cc) throws Exception {
