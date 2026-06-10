@@ -94,7 +94,7 @@ public class BatchLogFactory {
 	}
 
 	/**
-	 * @Desc	  : 기록된 로그가 있는지 확인합니다.
+	 * @Desc	  : 로그가 생성 있는지 확인합니다.
 	 * @Interface :
 	 * @Param	 : je
 	 * @Return	:
@@ -108,6 +108,20 @@ public class BatchLogFactory {
 	}
 
 	/**
+	 * @Desc	  : 로그가 활성화 되었는지 확인합니다.
+	 * @Interface :
+	 * @Param	 : je
+	 * @Return	:
+	 * @ETC	   :
+	 * @Since	 :
+	 * @Author	:
+	 *
+	 */
+	public static boolean isLogAvailable(JobExecution je) {
+		return batchLogMap.containsKey(je);
+	}
+
+	/**
 	 * @Desc	  : 로그를 클리어합니다. 반드시 작업 종료 후엔 클리어 되어야 합니다.
 	 * @Interface :
 	 * @Param	 : je
@@ -118,7 +132,9 @@ public class BatchLogFactory {
 	 *
 	 */
 	public static void clear(JobExecution je) {
-		batchLogMap.remove(je);
+		synchronized (batchLogMap) {
+			batchLogMap.remove(je);
+		}
 	}
 
 	public static Set<JobExecution> getKeySet() {

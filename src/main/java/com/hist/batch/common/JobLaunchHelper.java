@@ -83,7 +83,7 @@ public class JobLaunchHelper {
 				return new BatchLaunchResultModel(je.getJobInstance().getJobName(), je.getId(), unKnownErrorCode, e.getMessage());
 			} finally {
 				if(jobParams == null || !"Y".equals(jobParams.getString("asyncYn"))) {
-					if (BatchLogFactory.isLogExist(je)) {
+					if (BatchLogFactory.isLogAvailable(je)) {
 						BatchLogFactory.clear(je);
 					}
 				}

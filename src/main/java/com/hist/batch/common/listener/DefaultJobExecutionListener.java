@@ -71,6 +71,11 @@ public class DefaultJobExecutionListener implements JobExecutionListener, Initia
 
 		// 2. MultiSync 실패 처리
 		handleMultiSyncResult(jobExecution);
+
+		JobParameters params = jobExecution.getJobParameters();
+		if (params != null && "Y".equals(params.getString("asyncYn"))) {
+			BatchLogFactory.clear(jobExecution);
+		}
 	}
 
 	private boolean isMultiSyncEligible(JobParameters params) {
@@ -99,11 +104,6 @@ public class DefaultJobExecutionListener implements JobExecutionListener, Initia
 		} catch (JsonProcessingException e) {
 			log.error("Parsing error afterJob BatchLog : {}, jobExecutionId : {}", e.getMessage(), jobExecution.getId());
 			jobExecution.setExitStatus(new ExitStatus(jobExecution.getExitStatus().getExitCode(), e.toString()));
-		}
-
-		JobParameters params = jobExecution.getJobParameters();
-		if (params != null && "Y".equals(params.getString("asyncYn"))) {
-			BatchLogFactory.clear(jobExecution);
 		}
 	}
 
