@@ -138,6 +138,8 @@ public class BatchLogFactory {
 	}
 
 	public static Set<JobExecution> getKeySet() {
-		return batchLogMap.keySet();
+		synchronized (batchLogMap) {
+			return batchLogMap.keySet();
+		}
 	}
 }

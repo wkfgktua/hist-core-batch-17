@@ -30,13 +30,14 @@ public class DebugController {
 
 		Set<JobExecution> batchLogKeySet = BatchLogFactory.getKeySet();
 		if (!batchLogKeySet.isEmpty()) {
-			List<JobExecution> safeCopy;
-			synchronized (BatchLogFactory.class) {
-				safeCopy = new ArrayList<>(batchLogKeySet);
+			List<JobExecution> safeList;
+			synchronized (batchLogKeySet) {
+				safeList = new ArrayList<>(batchLogKeySet);
 			}
 
 			html.append("\n\n<br/><br/>[BatchLog Data] <br/><br/>");
-			for (JobExecution je : safeCopy) {
+
+			for (JobExecution je : safeList) {
 				if (je == null) {
 					html.append("\n<br/>je is null !!");
 				} else {
@@ -147,13 +148,14 @@ public class DebugController {
 
 		Set<JobExecution> batchLogKeySet = BatchLogFactory.getKeySet();
 		if (!batchLogKeySet.isEmpty()) {
-			List<JobExecution> safeCopy;
-			synchronized (BatchLogFactory.class) {
-				safeCopy = new ArrayList<>(batchLogKeySet);
+			html.append("\n\n<br/><br/>[BatchLog Data] <br/><br/>");
+
+			List<JobExecution> safeList;
+			synchronized (batchLogKeySet) {
+				safeList = new ArrayList<>(batchLogKeySet);
 			}
 
-			html.append("\n\n<br/><br/>[BatchLog Data] <br/><br/>");
-			for (JobExecution je : safeCopy) {
+			for (JobExecution je : safeList) {
 				if (je == null) {
 					html.append("\n<br/>je is null !!");
 				} else {
