@@ -1,6 +1,7 @@
 package com.hist.batch.common.log;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -139,7 +140,7 @@ public class BatchLogFactory {
 
 	public static Set<JobExecution> getKeySet() {
 		synchronized (batchLogMap) {
-			return batchLogMap.keySet();
+			return new HashSet<>(batchLogMap.keySet());
 		}
 	}
 }
