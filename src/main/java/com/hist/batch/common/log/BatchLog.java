@@ -113,4 +113,24 @@ public class BatchLog {
 	public boolean isHasError() {
 		return hasError;
 	}
+
+	/**
+	 * @Desc : 로그 오름차순 정렬
+	 */
+	public BatchLog sortAsc() {
+		synchronized (logs) {
+			Collections.sort(logs);
+		}
+		return this;
+	}
+
+	/**
+	 * @Desc : 로그 내림차순 정렬
+	 */
+	public BatchLog sortDesc() {
+		synchronized (logs) {
+			Collections.sort(logs, Collections.reverseOrder());
+		}
+		return this;
+	}
 }
