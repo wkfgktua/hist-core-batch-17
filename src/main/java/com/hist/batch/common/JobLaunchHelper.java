@@ -135,7 +135,7 @@ public class JobLaunchHelper {
 						}
 					} else {
 						rv.setCode(unKnownErrorCode);
-						rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + je.getAllFailureExceptions().toString());
+						rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + StrUtil.truncateWithEllipsis(je.getAllFailureExceptions().toString(), 10240));
 					}
 					break;
 				case STOPPED:
@@ -149,7 +149,7 @@ public class JobLaunchHelper {
 						}
 					} else {
 						rv.setCode(unKnownErrorCode);
-						rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + je.getAllFailureExceptions().toString());
+						rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + StrUtil.truncateWithEllipsis(je.getAllFailureExceptions().toString(), 10240));
 					}
 					break;
 				case STARTED:
@@ -158,11 +158,11 @@ public class JobLaunchHelper {
 					break;
 				case FAILED:
 					rv.setCode(unKnownErrorCode);
-					rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + je.getAllFailureExceptions().toString());
+					rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + StrUtil.truncateWithEllipsis(je.getAllFailureExceptions().toString(), 10240));
 					break;
 				default:
 					rv.setCode(unKnownErrorCode);
-					rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + je.getAllFailureExceptions().toString());
+					rv.setMessage(StrUtil.truncateWithEllipsis(batchLog.toString(), 10240) + (hasBatchLog ? BatchConst.BATCH_LOG_SEPERATOR : "") + StrUtil.truncateWithEllipsis(je.getAllFailureExceptions().toString(), 10240));
 			}
 		} else {
 			switch(je.getStatus()) {
